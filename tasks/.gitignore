@@ -1,1 +1,7 @@
-.dat
+*.dat
+*.pyc
+*.toc
+*.aux
+*.fls
+*.log
+*.gz

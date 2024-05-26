@@ -1,0 +1,559 @@
+\documentclass[spec, och, labwork]{shiza}
+% параметр - тип обучения - одно из значений:
+%    spec     - специальность
+%    bachelor - бакалавриат (по умолчанию)
+%    master   - магистратура
+% параметр - форма обучения - одно из значений:
+%    och   - очное (по умолчанию)
+%    zaoch - заочное
+% параметр - тип работы - одно из значений:
+%    referat    - реферат
+%    coursework - курсовая работа (по умолчанию)
+%    diploma    - дипломная работа
+%    pract      - отчет по практике
+% параметр - включение шрифта
+%    times    - включение шрифта Times New Roman (если установлен)
+%               по умолчанию выключен
+\usepackage{subfigure}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.5}
+\usepackage{float}
+
+%\usepackage{titlesec}
+\setcounter{secnumdepth}{4}
+%\titleformat{\paragraph}
+%{\normalfont\normalsize}{\theparagraph}{1em}{}
+%\titlespacing*{\paragraph}
+%{35.5pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\titleformat{\paragraph}[block]
+{\hspace{1.25cm}\normalfont}
+{\theparagraph}{1ex}{}
+\titlespacing{\paragraph}
+{0cm}{2ex plus 1ex minus .2ex}{.4ex plus.2ex}
+
+% --------------------------------------------------------------------------%
+
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage{tempora}
+
+\usepackage[sort,compress]{cite}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{fancyvrb}
+\usepackage{listings}
+\usepackage{listingsutf8}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage[english,russian]{babel}
+
+% \usepackage[colorlinks=true]{hyperref}
+\usepackage{url}
+
+\usepackage{underscore}
+\usepackage{setspace}
+\usepackage{indentfirst} 
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{minted}
+
+\newcommand{\eqdef}{\stackrel {\rm def}{=}}
+\newcommand{\specialcell}[2][c]{%
+\begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
+\renewcommand\theFancyVerbLine{\small\arabic{FancyVerbLine}}
+
+\newtheorem{lem}{Лемма}
+
+\begin{document}
+
+% Кафедра (в родительном падеже)
+\chair{}
+
+% Тема работы
+\title{Теория псевдослучайных генераторов}
+
+% Курс
+\course{4}
+
+% Группа
+\group{431}
+
+% Факультет (в родительном падеже) (по умолчанию "факультета КНиИТ")
+\department{факультета КНиИТ}
+
+% Специальность/направление код - наименование
+%\napravlenie{09.03.04 "--- Программная инженерия}
+%\napravlenie{010500 "--- Математическое обеспечение и администрирование информационных систем}
+%\napravlenie{230100 "--- Информатика и вычислительная техника}
+%\napravlenie{231000 "--- Программная инженерия}
+\napravlenie{100501 "--- Компьютерная безопасность}
+
+% Для студентки. Для работы студента следующая команда не нужна.
+% \studenttitle{Студентки}
+
+% Фамилия, имя, отчество в родительном падеже
+\author{Ивановой Ксении}
+
+% Заведующий кафедрой
+% \chtitle{} % степень, звание
+% \chname{}
+
+%Научный руководитель (для реферата преподаватель проверяющий работу)
+\satitle{доцент} %должность, степень, звание
+\saname{И. И. Слеповичев}
+
+% Руководитель практики от организации (только для практики,
+% для остальных типов работ не используется)
+% \patitle{к.ф.-м.н.}
+% \paname{С.~В.~Миронов}
+
+% Семестр (только для практики, для остальных
+% типов работ не используется)
+%\term{8}
+
+% Наименование практики (только для практики, для остальных
+% типов работ не используется)
+%\practtype{преддипломная}
+
+% Продолжительность практики (количество недель) (только для практики,
+% для остальных типов работ не используется)
+%\duration{4}
+
+% Даты начала и окончания практики (только для практики, для остальных
+% типов работ не используется)
+%\practStart{30.04.2019}
+%\practFinish{27.05.2019}
+
+% Год выполнения отчета
+\date{2024}
+
+\maketitle
+
+% Включение нумерации рисунков, формул и таблиц по разделам
+% (по умолчанию - нумерация сквозная)
+% (допускается оба вида нумерации)
+% \secNumbering
+
+%-------------------------------------------------------------------------------------------
+\tableofcontents
+
+\section{Генераторы псевдослучайных чисел}
+\subsection{Линейный конгруэнтный метод}
+Линейной конгруэнтной последовательностью (ЛКП) называется последовательность ПСЧ, получаемая по формуле:
+\begin{equation}
+  X_{n + 1} = (aX_n + c) \mod m, \; n \geq 1,
+\end{equation}
+
+Параметры запуска программы:
+Модуль, множитель, приращение, начальное значение.
+
+Пример запуска:
+\begin{small}
+\begin{verbatim}
+  python3 main.py -g lc -i 1024,1664525,1013904223,1 -n 10000 -f lc.dat
+\end{verbatim}
+\end{small}
+
+Алгоритм:
+\begin{small}
+\begin{verbatim}
+def lc(args=args_for_gen["lc"]):
+  a = int(args[0])
+  c = int(args[1])
+  mod = int(args[2])
+  x_n = int(args[3]) 
+  while(True):
+      x_n = (x_n * a + c) % mod
+      yield x_n
+\end{verbatim}
+\end{small}
+
+
+% -------------% -------------% -------------% -------------% -------------% -------------
+
+\subsection{Аддитивный метод}
+
+Последовательность определяется следующим образом:
+\begin{equation}
+  X_n = (X_{n - k} + X_{n - j}) \mod m, \; j > k \geq 1.
+\end{equation}
+
+Параметры запуска программы: Модуль, младший индекс, старший индекс, последовательность начальных
+значений.
+
+Пример запуска:
+\begin{small}
+\begin{verbatim}
+  python3 main.py -g add -i 30000,24,55,79,134,213,347,560,907,1467,2374,3...,
+  17506 -n 10000 -f add.dat
+\end{verbatim}
+\end{small}
+
+Алгоритм:
+\begin{small}
+\begin{verbatim}
+def add(args=args_for_gen["add"]):
+  mod, k, j = int(args[0]), int(args[1]), int(args[2])
+  x = list(map(int, args[3:]))
+  i = 55
+  while(True):
+      val = (x[i-k] + x[i-j]) % mod
+      x.append(val)
+      i += 1
+      yield val
+\end{verbatim}
+\end{small}
+
+
+% -------------% -------------% -------------% -------------% -------------% -------------
+
+\subsection{Пятипараметрический метод}
+
+Метод является частным случаем РСЛОС, использует характеристический многочлен из 5 членов и позволяет генерировать последовательности $w$-битовых двоичных целых чисел в соответствии со следующей рекуррентной 
+формулой:
+
+\begin{equation}
+  X_{n + p} = X_{n + q_1} + X_{n + q_2} + X_{n + q_3} + X_n, \; n = 1, 2, 3, \dots
+\end{equation}
+
+Параметры запуска программы: p, q1, q2, q3, w, начальное значение.
+
+Пример запуска:
+\begin{small}
+\begin{verbatim}
+  python3 main.py -g 5p -i 89,7,13,24,10,234122131 -n 10000 -f 5p.dat
+\end{verbatim}
+\end{small}
+
+Алгоритм:
+\begin{small}
+\begin{verbatim}
+def fp(args=args_for_gen["fp"]):
+  p, w, x = int(args[0]), int(args[4]), int(args[5])
+  mask_w, mask_p = 0, 0
+  list_par = list(map(int, args[1:4]))
+  list_par.append(0)
+
+  for i in range(w):
+      mask_w = set_bit(mask_w, i, 1)
+  for i in range(p):
+      mask_p = set_bit(mask_p, i, 1)
+
+  while(True):
+      cur_bit = 0
+      for i in list_par:
+          cur_bit ^= get_bit(x, i)
+      x = shift(x, p)
+      x = set_bit(x, 0, cur_bit)
+      x = x & mask_p
+      yield x & mask_w
+\end{verbatim}
+\end{small}
+
+
+
+% -------------% -------------% -------------% -------------% -------------% -------------
+
+\subsection{Регистр сдвига с обратной связью (РСЛОС)}
+
+Регистр сдвига с обратной линейной связью (РСЛОС) "--- регистр сдвига битовых слов, у которого входной (вдвигаемый) бит является линейной функцией остальных битов. Вдвигаемый вычисленный бит заносится в 
+ячейку с номером 0. Количество ячеек $p$ называют длиной регистра.
+
+Одна итерация алгоритма, генерирующего последовательность, состоит 
+из следующих шагов:
+\begin{enumerate}
+  \item Содержимое ячейки $p - 1$ формирует очередной бит ПСП битов.
+  \item Содержимое ячейки 0 определяется значением функции обратной связи, 
+  являющейся линейной булевой функцией с коэффициентами $a_1, \dots, a_{p - 1}$.
+  \item Содержимое каждого $i$-го бита перемещается в $(i + 1)$-й, $0 \leq i < p - 1$. 
+  \item В ячейку 0 записывается новое содержимое, вычисленное на шаге 2.
+\end{enumerate}
+
+Параметры запуска программы: двоичное представление вектора коэффициентов, начальное значение регистра
+
+Пример запуска:
+\begin{small}
+\begin{verbatim}
+  python3 main.py -g lfsr -i 10011011010011010,000101000111 -n 10000 -f lfsr.dat
+\end{verbatim}
+\end{small}
+
+Алгоритм:
+\begin{small}
+\begin{verbatim}
+def lfsr(args=args_for_gen["lfsr"]):
+  s, x, y = len(args[1]), int(args[0], 2), int(args[1], 2)
+  while(True):
+      current = 0
+      for i in range(s):
+          current ^= get_bit(x, i) * get_bit(y, i)
+      y = shift(y, s)
+      y = set_bit(y, 0, current)
+      yield y
+\end{verbatim}
+\end{small}
+
+
+
+
+% -------------% -------------% -------------% -------------% -------------% -------------
+
+\subsection{Нелинейная комбинация РСЛОС}
+
+Последовательность получается из нелинейной комбинации трёх РСЛОС следующим образом:
+\begin{equation}
+  f(x_1, x_2, x_3) = x_1 x_2 \oplus x_2 x_3 \oplus x_3
+\end{equation}
+
+
+Параметры запуска программы: двоичное представление векторов коэффициентов
+для R1, R2, R3, w, x1, x2, x3. w – длина слова, x1, x2, x3 – десятичное представление
+начальных состояний регистров R1, R2, R3.
+
+Пример запуска:
+\begin{small}
+\begin{verbatim}
+  python3 main.py -g nfsr -i 00000001010101,01011100000111101,010101001100000,
+  0001001,10000010010,000000001,1001 -f nfsr.dat -n 10000
+\end{verbatim}
+\end{small}
+
+Алгоритм:
+\begin{small}
+\begin{verbatim}
+def nfsr(args=args_for_gen["nfsr"]):
+  r1 = lfsr([args[0], args[3]])
+  r2 = lfsr([args[1], args[4]])
+  r3 = lfsr([args[2], args[5]])
+  w1 = 0
+  for i in range(int(args[6])):
+      w1 = set_bit(w1, i, 1)
+  while True:
+      a, b, c = next(r1), next(r2), next(r3)
+      yield (a ^ b + b ^ c + c) & w1
+\end{verbatim}
+\end{small}
+
+
+% -------------% -------------% -------------% -------------% -------------% -------------
+
+\subsection{Вихрь Мерсенна}
+
+Метод основан на свойствах простых чисел Мерсенна и обладает рядом
+достоинств относительно многих других ГПСЧ. «Вихрь» – это преобразование, которое обеспечивает
+равномерное распределение ПСЧ.
+
+Числом Мерсенна называется натуральное число, определяемое формулой
+\begin{equation}
+  M_n = 2^n - 1.
+\end{equation}
+
+Алгоритм состоит из следующих шагов:
+\begin{enumerate}
+  \item Инициализируются значения $u, h, a$ по формуле:
+
+  $u:=(1,0,\dots,0)$ - всего $w-r$ бит, 
+  \newline $h:=(0,1,\dots,1)$ - всего $r$ бит,
+
+  $a:=(a_{w-1}, a_{w-2}, \dots, a_0)$ - последняя строка матрицы $А$.
+  \item $X_0, X_1, \dots, X_{p-1}$ заполняются начальными значениями.
+  \item Вычисляется $Y:=(y_0, y_1, \dots, y_{w-1}):=(X^r_n | X^l_{n+1})$.
+  \item Вычисляется новое значение $X_i$:
+  
+  $X_n := X_{(n+q) \text{mod} p} \oplus (Y >> 1) \oplus a$, если младший бит $y_0=1$;
+
+  $X_n := X_{(n+q) \text{mod} p} \oplus (Y >> 1) \oplus 0$, если младший бит $y_0=0$;
+  \item Вычисляется $X_iT$:
+  \newline$Y:=X_n, $
+  \newline$Y:=Y \oplus (Y >> u), $
+  \newline$Y:=Y \oplus ((Y << s) \cdot b),$
+  \newline$Y:=Y \oplus ((Y << t) \cdot c), $
+  \newline$Z:=Y \oplus (Y >> l).$
+
+  $Z$ подается на выход, как результат.
+  \item $n:=(n+1) \text{mod } p$. Переход на шаг 3.
+\end{enumerate}
+
+
+Параметры запуска программы: модуль, начальное значение x.
+
+Пример запуска:
+\begin{small}
+\begin{verbatim}
+  python3 main.py -g mt -i 1000,1234 -n 10000 -f mt.dat
+ \end{verbatim}
+\end{small}
+
+Алгоритм:
+\begin{small}
+\begin{verbatim}
+def mt(args=args_for_gen["mt"]):
+  p, w, r, q, a, u = 624, 32, 31, 397, 2567483615, 11
+  s, t, l, b, c = 7, 15, 18, 2636928640, 4022730752
+  mod = int(args[0])
+  MT = [int(args[1])]
+  lower_mask = (1 << r) - 1
+  upper_mask = (~lower_mask * -1) & w1
+  w1 = 0
+  ind = p
+
+  for i in range(w):
+      w1 = set_bit(w1, i, 1)
+
+  for i in range(1, p):
+      MT.append((MT[i - 1] ^ (MT[i - 1] >> 30)) + i)
+
+  while(True):
+      if (ind >= p):
+          for i in range(p):
+              x = (MT[i] & upper_mask) + (MT[(i + 1) % p] & lower_mask)
+              xA = x >> 1
+              if (x & 1):
+                  xA ^= a
+              MT[i] = MT[(i + q) % p] ^ xA
+          ind = 0
+      y = MT[ind]
+      ind += 1
+      y ^= (y >> u)
+      y ^= (y << s) & b
+      y ^= (y << t) & c
+      y ^= (y >> l)
+      yield y % mod
+
+\end{verbatim}
+\end{small}
+
+
+
+% -------------% -------------% -------------% -------------% -------------% -------------
+
+\subsection{RC4}
+
+Алгоритм состоит из следующих шагов:
+\begin{enumerate}
+  \item Инициализация $S_i$.
+  \item $i = 0, j = 0$.
+  \item Итерация алгоритма:
+    \begin{enumerate}
+      \item $ans = 0$;
+      \item $i = (i + 1) \mod 256$;
+      \item $j = (j + S_i) \mod 256$;
+      \item $Swap(S_i, S_j)$;
+      \item $t = (S_i + S_j) \mod 256$;
+      \item $K = S_t$.
+      \item $ans = ans << 1 + K \& 1$
+      \item Если количество бит $< w$, перейти к шагу б.
+    \end{enumerate}
+\end{enumerate}
+
+Параметры запуска программы: 256 начальных значений.
+
+Пример запуска:
+\begin{small}
+\begin{verbatim}
+  python3 main.py -g rc4 -i 213,968,838,64,355,214,212,...,659,180,10 -f rc.dat 
+  -n 10000
+ \end{verbatim}
+\end{small}
+
+Алгоритм:
+\begin{small}
+\begin{verbatim}
+def rc4(args=args_for_gen["rc4"]):
+  k = list(map(int, args[:-2]))
+  w = int(args[-1])
+  l = len(k)
+  s = [i for i in range(l)]
+  i, j = 0, 0
+  for i in range(l):
+      j = (j + s[i] + k[i]) % l
+      s[i], s[j] = s[j], s[i]
+  while(True):
+      num = 0
+      for t in range(w):
+          i = (i + 1) % l
+          j = (j + s[i]) % l
+          s[i], s[j] = s[j], s[i]
+          num = set_bit(num, t, s[(s[i] + s[j]) % l] & 1)
+      yield num
+\end{verbatim}
+\end{small}
+
+
+% -------------% -------------% -------------% -------------% -------------% -------------
+\subsection{ГПСЧ на основе RSA}
+
+Алгоритм состоит из следующих шагов:
+\begin{enumerate}
+  \item Инициализация чисел: $n = pq$, где $p$ и $q$ простые числа, числа $e$: $1 < e < f$, НОД($e, f$) = 1, $f = (p - 1)(q - 1)$ и числа $x_0$ из интервала $[1, n - 1]$.
+  \item \texttt{For i = 1 to w do}
+        \begin{enumerate}
+          \item $x_i \leftarrow x_{i-1}^e \mod n$.
+          \item $z_i \leftarrow $ последний значащий бит $x_i$
+        \end{enumerate}
+  \item Вернуть $z_1, \dots, z_w$.
+\end{enumerate}
+
+Параметры запуска программы: модуль n, число e, w, начальное значение x.
+
+Пример запуска:
+\begin{small}
+\begin{verbatim}
+  python3 main.py -g rsa -i 10967,571,77,10 -n 10000 -f rsa.dat
+ \end{verbatim}
+\end{small}
+
+Алгоритм:
+\begin{small}
+\begin{verbatim}
+def rsa(args=args_for_gen["rsa"]):
+  n = int(args[0])
+  e = int(args[1])
+  x = int(args[2])
+  w = int(args[3])
+  while(True):
+      z = 0
+      for i in range(w):
+          x = x ** e % n
+          z = set_bit(z, w - i - 1, x & 1)
+      yield z
+\end{verbatim}
+\end{small}
+
+% -------------% -------------% -------------% -------------% -------------% -------------
+
+\subsection{Алгоритм Блюм-Блюма-Шуба}
+
+Алгоритм состоит из следующих шагов:
+\begin{enumerate}
+  \item Инициализация числа: $n = 127 \cdot 131 = 16637$.
+  \item Вычислим $x_0 = x^2 \mod n$, которое будет начальным вектором.
+  \item \texttt{For i = 1 to w do}
+        \begin{enumerate}
+          \item $x_i \leftarrow x_{i-1}^2 \mod n$.
+          \item $z_i \leftarrow $ последний значащий бит $x_i$
+        \end{enumerate}
+  \item Вернуть $z_1, \dots, z_w$.
+\end{enumerate}
+
+Параметры запуска программы: начальное значение x (взаимно простое с n).
+
+Пример запуска:
+\begin{small}
+\begin{verbatim}
+  python3 main.py -g bbs -i 15621,10 -n 10000 -f bbs.dat
+ \end{verbatim}
+\end{small}
+
+Алгоритм:
+\begin{small}
+\begin{verbatim}
+def bbs(args=args_for_gen["bbs"]):

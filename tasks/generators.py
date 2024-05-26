@@ -1,5 +1,5 @@
 from utils import set_bit, get_bit, shift
-from args_gen import args_for_gen
+from args import args_for_gen
 
 
 def lc(args=args_for_gen["lc"]):

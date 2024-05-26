@@ -3,13 +3,10 @@ import textwrap
 import os
 import sys
 
-from args_gen import met, por
 
 class Pars_arg(argparse.ArgumentParser):
 
     def __init__(self, *args, **kwargs):
-        print(met)
-        print(por)
         super(Pars_arg, self).__init__(*args, **kwargs)
         self.program = {key: kwargs[key] for key in kwargs }
         self.options = []

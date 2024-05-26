@@ -1,0 +1,31 @@
+\babel@toc {russian}{}
+\contentsline {section}{\numberline {1}Генераторы псевдослучайных чисел}{3}{}%
+\contentsline {subsection}{\numberline {1.1}Линейный конгруэнтный метод}{3}{}%
+\contentsline {subsection}{\numberline {1.2}Аддитивный метод}{3}{}%
+\contentsline {subsection}{\numberline {1.3}Пятипараметрический метод}{4}{}%
+\contentsline {subsection}{\numberline {1.4}Регистр сдвига с обратной связью (РСЛОС)}{5}{}%
+\contentsline {subsection}{\numberline {1.5}Нелинейная комбинация РСЛОС}{5}{}%
+\contentsline {subsection}{\numberline {1.6}Вихрь Мерсенна}{6}{}%
+\contentsline {subsection}{\numberline {1.7}RC4}{8}{}%
+\contentsline {subsection}{\numberline {1.8}ГПСЧ на основе RSA}{9}{}%
+\contentsline {subsection}{\numberline {1.9}Алгоритм Блюм-Блюма-Шуба}{9}{}%
+\contentsline {section}{\numberline {2}Преобразование ПСЧ к заданному распределению}{11}{}%
+\contentsline {subsection}{\numberline {2.1}Стандартное равномерное с заданным интервалом}{11}{}%
+\contentsline {subsection}{\numberline {2.2}Треугольное распределение}{11}{}%
+\contentsline {subsection}{\numberline {2.3}Общее экспоненциальное распределение}{11}{}%
+\contentsline {subsection}{\numberline {2.4}Нормальное распределение}{12}{}%
+\contentsline {subsection}{\numberline {2.5}Гамма распределение}{12}{}%
+\contentsline {subsection}{\numberline {2.6}Логнормальное распределение}{13}{}%
+\contentsline {subsection}{\numberline {2.7}Логистическое распределение}{13}{}%
+\contentsline {subsection}{\numberline {2.8}Биномиальное распределение}{13}{}%
+\redeflsection 
+\ttl@change@i {\@ne }{section}{3ex}{\hspace {-3ex}}{\appendixname ~\thecontentslabel \hspace {2ex}}{\hspace {2.3em}}{\titlerule *[0.98ex]{.}\contentspage }\relax 
+\ttl@change@v {section}{}{}{}\relax 
+\contentsline {section}{\numberline {\CYRA }Файлы заданий}{15}{}%
+\contentsline {subsection}{\numberline {1.1}Аргументы для генерации}{15}{}%
+\contentsline {subsection}{\numberline {1.2}Реализация генераторов}{15}{}%
+\contentsline {subsection}{\numberline {1.3}Реализация распределений}{18}{}%
+\contentsline {subsection}{\numberline {1.4}Дополнительные функции}{19}{}%
+\contentsline {subsection}{\numberline {1.5}main задания 1}{19}{}%
+\contentsline {subsection}{\numberline {1.6}main задания 2}{20}{}%
+\contentsfinish 
