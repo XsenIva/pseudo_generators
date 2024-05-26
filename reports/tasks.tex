@@ -557,3 +557,250 @@ def rsa(args=args_for_gen["rsa"]):
 \begin{small}
 \begin{verbatim}
 def bbs(args=args_for_gen["bbs"]):
+  p, q = 127, 131
+  n = p * q
+  x, w = int(args[0]), int(args[1])
+  while(True):
+      z = 0
+      for i in range(w):
+          x = x * x % n
+          z = set_bit(z, w - i - 1, x & 1)
+      yield z
+\end{verbatim}
+\end{small}
+
+
+
+
+
+\section{Преобразование ПСЧ к заданному распределению}
+\subsection{Стандартное равномерное с заданным интервалом}
+
+Формула: \[ Y = bU + a \]
+
+Пример запуска:
+\begin{small}
+\begin{verbatim}
+  python3 main1.py -d st -f 5p.dat -p1 1024 -p2 1664525 -p3 876 
+ \end{verbatim}
+\end{small}
+
+Алгоритм:
+\begin{small}
+\begin{verbatim}
+  def st(x, a, b, m):
+    return a + U(x, m) * b
+\end{verbatim}
+\end{small}
+
+
+\subsection{Треугольное распределение}
+
+Формула:
+\[ Y = a + b(U_1 + U_2 - 1) \]
+
+Пример запуска:
+\begin{small}
+\begin{verbatim} 
+  python3 main1.py -d tr -f 5p.dat -p1 1024 -p2 1664525 -p3 876  
+
+ \end{verbatim}
+\end{small}
+
+Алгоритм:
+\begin{small}
+\begin{verbatim}
+def tr(x, a, b, m):
+  y = []
+  for i in range(0, len(x)-1, 2):
+      y.append(a + b * (U(x[i], m) + U(x[i+1], m) - 1))
+  return np.array(y)
+\end{verbatim}
+\end{small}
+
+
+\subsection{Общее экспоненциальное распределение}
+
+Формула:
+\[ Y = -b \ln(U) + a \]
+
+Пример запуска:
+\begin{small}
+\begin{verbatim}
+  python3 main1.py -d ex -f 5p.dat -p1 1024 -p2 1664525 -p3 876  
+ \end{verbatim}
+\end{small}
+
+Алгоритм:
+\begin{small}
+\begin{verbatim}
+  def ex(x, a, b, m):
+    return a - b * np.log(U(x, m))
+\end{verbatim}
+\end{small}
+
+
+\subsection{Нормальное распределение}
+
+Формула:
+\[ Z_1 = \mu \sigma \sqrt{-2 \ln(1 - U_1)} \cos(2 \pi U_2) \]
+\[ Z_2 = \mu \sigma \sqrt{-2 \ln(1 - U_1)} \sin(2 \pi U_2) \]
+
+Пример запуска:
+\begin{small}
+\begin{verbatim}
+  python3 main1.py -d nr -f 5p.dat -p1 1024 -p2 1664525 -p3 876  
+ \end{verbatim}
+\end{small}
+
+Алгоритм:
+\begin{small}
+\begin{verbatim}
+def nr(x, a, b, m):
+  y = []
+  for i in range(0, len(x)-1, 2):
+      base = a + b * np.sqrt(-2 * np.log(1 - U(x[i], m)))
+      trig_arg = 2 * np.pi * U(x[i+1], m)
+      y.append(base * np.cos(trig_arg), base * np.sin(trig_arg))
+  return np.array(y)
+\end{verbatim}
+\end{small}
+
+
+\subsection{Гамма распределение}
+
+Алгоритм для $c = k$ ($k$ -- целое число)
+\[ Y = a - b \ln \{(1 - U_1) \dots (1 - U_k)\} \]
+
+Пример запуска:
+\begin{small}
+\begin{verbatim}
+  python3 main1.py -d gm -f 5p.dat -p1 1024 -p2 1664525 -p3 876   
+ \end{verbatim}
+\end{small}
+
+Алгоритм:
+\begin{small}
+\begin{verbatim}
+  def gm(x, a, b, c, m):
+  y = []
+  u = U(x, m)
+  if type(c) == type(1):
+      for i in range(0, len(u), c):
+          y.append(a - b  * np.log(np.prod(1 - u[i:i+c])))
+  else:
+      k = int(c - 0.5)
+      for i in range(0, len(u), 2 * k + 2):
+          z1, z2 = nr([x[i], x[i+1]], 0, 1, m)
+          y.append(a + b * (z1 ** 2 / 2 - np.log(np.prod(1 - u[i+2:i+k+2]))))
+          y.append(a + b * (z2 ** 2 / 2 - np.log(np.prod(1 - u[i+k+2:i+2*k+2]))))
+  return np.array(y)
+\end{verbatim}
+\end{small}
+
+
+\subsection{Логнормальное распределение}
+
+Формула:
+\[ Y = a + \exp(b - Z) \]
+
+Пример запуска:
+\begin{small}
+\begin{verbatim}
+  python3 main1.py -d ln -f 5p.dat -p1 1024 -p2 1664525 -p3 876   
+ \end{verbatim}
+\end{small}
+
+Алгоритм:
+\begin{small}
+\begin{verbatim}
+def ln(x, a, b, m):
+  return a + np.exp(b - nr(x, 0, 1, m))
+\end{verbatim}
+\end{small}
+
+\subsection{Логистическое распределение}
+
+Формула:
+\[ Y = a + b \ln(\frac{U}{1 - U})\]
+
+Пример запуска:
+\begin{small}
+\begin{verbatim}
+  python3 main1.py -d ls -f 5p.dat -p1 1024 -p2 1664525 -p3 876  
+ \end{verbatim}
+\end{small}
+
+Алгоритм:
+\begin{small}
+\begin{verbatim}
+def ls(x, a, b, m):
+  u = U(x, m)
+  return a + b * np.log(u / (1 - u))
+\end{verbatim}
+\end{small}
+
+\subsection{Биномиальное распределение}
+\begin{minted}[fontsize=\footnotesize]{text}
+  y = binominal(x, a, b, m):
+    u = U(x)
+    s = 0
+    k = 0
+    loopstart:
+      s = s + C(k, b) + a^k * (1 - a)^(b - k)
+      if s > u:
+        y = k
+        Завершить
+      if k < b - 1:
+        k = k + 1
+        move to loopstart
+      y = b
+  \end{minted}
+Пример запуска:
+\begin{small}
+\begin{verbatim}
+  python3 main1.py -d bi -f 5p.dat -p1 1024 -p2 1664525 -p3 876  
+ \end{verbatim}
+\end{small}
+
+Алгоритм:
+\begin{small}
+\begin{verbatim}
+def bi(x, a, b, m):
+  y = []
+  u = U(x, m)
+  for i in u:
+      s, k = 0, 0
+      while(True):
+          s += (factor(b) / (factor(k) * factor(b - k)) 
+                          * (a ** k) * ((1 - a) ** (b - k)))
+          if s > i:
+              y.append(k)
+              break
+          if k < b - 1:
+              k += 1
+              continue
+          y.append(b)
+  return np.array(y)
+
+\end{verbatim}
+\end{small}
+
+
+\newpage
+\appendix
+    \section{Файлы заданий}
+    \subsection{Аргументы для генерации}
+    \inputminted[fontsize=\scriptsize]{text}{../tasks/args.py}
+    \subsection{Реализация генераторов}
+    \inputminted[fontsize=\scriptsize]{text}{../tasks/generators.py}
+    \subsection{Реализация распределений}
+    \inputminted[fontsize=\scriptsize]{text}{../tasks/distribution.py}
+    \subsection{Дополнительные функции}
+    \inputminted[fontsize=\scriptsize]{text}{../tasks/utils.py}
+    \subsection{main задания 1}
+    \inputminted[fontsize=\scriptsize]{text}{../tasks/main.py}
+    \subsection{main задания 2}
+    \inputminted[fontsize=\scriptsize]{text}{../tasks/main1.py}
+
+\end{document}
