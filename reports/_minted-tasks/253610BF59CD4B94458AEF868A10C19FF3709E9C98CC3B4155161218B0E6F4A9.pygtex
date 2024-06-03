@@ -1,0 +1,26 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+import argparse
+from parser\PYGZus{}arg import Pars\PYGZus{}arg
+from utils import make\PYGZus{}write\PYGZus{}file
+from distribution import * 
+from args import dist
+
+dist\PYGZus{}dct = \PYGZob{}\PYGZdq{}st\PYGZdq{}: st, \PYGZdq{}tr\PYGZdq{}: tr, \PYGZdq{}ex\PYGZdq{}: ex, \PYGZdq{}nr\PYGZdq{}:nr, \PYGZdq{}gm\PYGZdq{}: gm, \PYGZdq{}ln\PYGZdq{}:ln, \PYGZdq{}ls\PYGZdq{}: ls, \PYGZdq{}bi\PYGZdq{}:bi\PYGZcb{}    
+
+def main\PYGZus{}1():
+    parser = Pars\PYGZus{}arg(description=\PYGZdq{}Приведение к определенному  распределению\PYGZdq{}, argument\PYGZus{}default=argparse.SUPPRESS, allow\PYGZus{}abbrev=False, add\PYGZus{}help=False)
+    parser.add\PYGZus{}argument(\PYGZdq{}\PYGZhy{}d\PYGZdq{}, \PYGZdq{}\PYGZhy{}\PYGZhy{}distribution\PYGZdq{}, type=str, help=\PYGZdq{}код распределения\PYGZdq{})
+    parser.add\PYGZus{}argument(\PYGZdq{}\PYGZhy{}f\PYGZdq{}, \PYGZdq{}\PYGZhy{}\PYGZhy{}filename\PYGZdq{}, type=str, help=\PYGZdq{}имя файла\PYGZdq{})
+    parser.add\PYGZus{}argument(\PYGZdq{}\PYGZhy{}p1\PYGZdq{}, \PYGZdq{}\PYGZhy{}a\PYGZdq{}, type=float, help=\PYGZdq{}первый параметр\PYGZdq{})
+    parser.add\PYGZus{}argument(\PYGZdq{}\PYGZhy{}p2\PYGZdq{}, \PYGZdq{}\PYGZhy{}b\PYGZdq{}, type=int, help=\PYGZdq{}второй параметр\PYGZdq{})
+    parser.add\PYGZus{}argument(\PYGZdq{}\PYGZhy{}p3\PYGZdq{}, \PYGZdq{}\PYGZhy{}c\PYGZdq{}, type=int, default=None, help=\PYGZdq{}третий параметр\PYGZdq{})
+    parser.add\PYGZus{}argument(\PYGZdq{}\PYGZhy{}h\PYGZdq{}, \PYGZdq{}\PYGZhy{}\PYGZhy{}help\PYGZdq{}, action=\PYGZdq{}help\PYGZdq{}, help=\PYGZdq{}выводит это сообщение\PYGZdq{})
+    
+    print (dist)
+    
+    args = parser.parse\PYGZus{}args()
+    
+    make\PYGZus{}write\PYGZus{}file(dist\PYGZus{}dct, args)
+    
+main\PYGZus{}1()
+\end{Verbatim}

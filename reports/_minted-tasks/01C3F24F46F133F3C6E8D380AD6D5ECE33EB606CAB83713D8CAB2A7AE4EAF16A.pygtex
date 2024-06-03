@@ -1,0 +1,29 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+import argparse
+from parser\PYGZus{}arg import Pars\PYGZus{}arg
+from generators import * 
+from args import met, por
+from utils import gen\PYGZus{}write\PYGZus{}file
+
+
+gens\PYGZus{}dct = \PYGZob{}\PYGZdq{}lc\PYGZdq{}: lc, \PYGZdq{}mt\PYGZdq{}: mt, \PYGZdq{}add\PYGZdq{}: add, \PYGZdq{}5p\PYGZdq{}:fp, \PYGZdq{}lfsr\PYGZdq{}: lfsr, \PYGZdq{}nfsr\PYGZdq{}:nfsr, \PYGZdq{}rc4\PYGZdq{}: rc4, \PYGZdq{}rsa\PYGZdq{}:rsa, \PYGZdq{}bbs\PYGZdq{}:bbs\PYGZcb{}
+
+
+if \PYGZus{}\PYGZus{}name\PYGZus{}\PYGZus{} == \PYGZdq{}\PYGZus{}\PYGZus{}main\PYGZus{}\PYGZus{}\PYGZdq{}:
+    parser = Pars\PYGZus{}arg(description=\PYGZdq{}Генераторы\PYGZdq{}, argument\PYGZus{}default=argparse.SUPPRESS, allow\PYGZus{}abbrev=False, add\PYGZus{}help=False)
+   
+    parser.add\PYGZus{}argument(\PYGZdq{}\PYGZhy{}g\PYGZdq{}, \PYGZdq{}\PYGZhy{}\PYGZhy{}generator\PYGZdq{}, type=str, help=\PYGZdq{}укажите генератор\PYGZdq{})
+    parser.add\PYGZus{}argument(\PYGZdq{}\PYGZhy{}n\PYGZdq{}, \PYGZdq{}\PYGZhy{}\PYGZhy{}amount\PYGZus{}of\PYGZus{}numbers\PYGZdq{}, type=int, default=10000, help=\PYGZdq{}кол\PYGZhy{}во генерируемых чисел\PYGZdq{})
+    parser.add\PYGZus{}argument(\PYGZdq{}\PYGZhy{}i\PYGZdq{}, \PYGZdq{}\PYGZhy{}\PYGZhy{}init\PYGZdq{}, type=str, help=\PYGZdq{}иниц. вектор генератора\PYGZdq{})
+    parser.add\PYGZus{}argument(\PYGZdq{}\PYGZhy{}f\PYGZdq{}, \PYGZdq{}\PYGZhy{}\PYGZhy{}filename\PYGZdq{}, type=str, default=\PYGZdq{}random\PYGZus{}sequence.dat\PYGZdq{}, help=\PYGZdq{}имя файла\PYGZdq{})
+    parser.add\PYGZus{}argument(\PYGZdq{}\PYGZhy{}h\PYGZdq{}, \PYGZdq{}\PYGZhy{}\PYGZhy{}help\PYGZdq{}, action=\PYGZdq{}help\PYGZdq{}, help=\PYGZdq{}выводит это сообщение\PYGZdq{}) 
+    
+    print(met)
+    print(por)
+
+    args = parser.parse\PYGZus{}args(namespace=None)
+    gen = gens\PYGZus{}dct[args.generator](args.init.split(sep=\PYGZdq{},\PYGZdq{}))
+    
+    gen\PYGZus{}write\PYGZus{}file(gen, args)
+ 
+\end{Verbatim}

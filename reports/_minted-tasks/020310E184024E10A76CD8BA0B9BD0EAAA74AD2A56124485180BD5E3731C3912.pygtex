@@ -1,0 +1,50 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+import tqdm
+import json
+import numpy as np
+
+def get\PYGZus{}bit(num, num\PYGZus{}bit):
+    return (num \PYGZam{} ( 1 \PYGZlt{}\PYGZlt{} num\PYGZus{}bit )) \PYGZgt{}\PYGZgt{} num\PYGZus{}bit
+
+def set\PYGZus{}bit(num, num\PYGZus{}bit, bit):
+    mask = 1 \PYGZlt{}\PYGZlt{} num\PYGZus{}bit
+    num \PYGZam{}= \PYGZti{}mask
+    if bit:
+        return num | mask
+    else:
+        return num
+    
+def shift(num, s):
+    new\PYGZus{}num = 0
+    bit = 0
+    for i in range(s):
+        new\PYGZus{}num = set\PYGZus{}bit(new\PYGZus{}num, i, bit)
+        bit = get\PYGZus{}bit(num, i)
+    new\PYGZus{}num = set\PYGZus{}bit(new\PYGZus{}num, 0, bit)
+    return new\PYGZus{}num
+
+def factor(x):
+    y = 1
+    for i in range(x):  y *= (i + 1)
+    return y
+
+def gen\PYGZus{}write\PYGZus{}file(gen, args):
+    print(\PYGZdq{}+\PYGZhy{}++\PYGZhy{}++\PYGZhy{}++\PYGZhy{}+\PYGZus{}Генерирую\PYGZus{}+\PYGZhy{}++\PYGZhy{}++\PYGZhy{}++\PYGZhy{}+\PYGZdq{})
+    ans = [next(gen) \PYGZpc{} 1024 for \PYGZus{} in tqdm.tqdm(range(args.amount\PYGZus{}of\PYGZus{}numbers))]
+    with open(args.filename, \PYGZsq{}w\PYGZsq{}) as fw:
+        json.dump(ans, fw)
+    print(\PYGZdq{}+\PYGZhy{}++\PYGZhy{}++\PYGZhy{}++\PYGZhy{}+\PYGZus{}Файл .dat готов\PYGZus{}+\PYGZhy{}++\PYGZhy{}++\PYGZhy{}+\PYGZdq{})
+
+
+def make\PYGZus{}write\PYGZus{}file(dist\PYGZus{}dct, args):
+    print(\PYGZdq{}+\PYGZhy{}++\PYGZhy{}++\PYGZhy{}++\PYGZhy{}+\PYGZus{}Генерирую\PYGZus{}+\PYGZhy{}++\PYGZhy{}++\PYGZhy{}++\PYGZhy{}+\PYGZdq{})
+    m = 1024
+    with open(args.filename, \PYGZsq{}r\PYGZsq{}) as fr:
+        nums = np.array(json.load(fr))
+    if args.distribution == \PYGZdq{}gm\PYGZdq{}:
+        dist\PYGZus{}nums = dist\PYGZus{}dct[args.distribution](nums, args.p1, args.p2, args.p3, m)
+    else:
+        dist\PYGZus{}nums = dist\PYGZus{}dct[args.distribution](nums, args.p1, args.p2, m)
+    np.savetxt(f\PYGZdq{}dist\PYGZhy{}\PYGZob{}args.distribution\PYGZcb{}.dat\PYGZdq{}, dist\PYGZus{}nums, fmt=\PYGZsq{}\PYGZpc{}1.4f\PYGZsq{})
+    print(\PYGZdq{}+\PYGZhy{}++\PYGZhy{}++\PYGZhy{}++\PYGZhy{}+\PYGZus{}Файл .dat готов\PYGZus{}+\PYGZhy{}++\PYGZhy{}++\PYGZhy{}+\PYGZdq{})
+\end{Verbatim}
